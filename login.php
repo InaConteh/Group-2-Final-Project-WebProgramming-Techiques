@@ -86,7 +86,10 @@ $conn->close();
 <body>
     <header>
         <nav class="navbar">
-            <div class="logo">Football Agency</div>
+            <a href="index.php" class="logo">
+                <img src="images/logo_icon.png" alt="LionSport Agency Badge">
+                <span class="logo-text">LionSport Agency</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="register.php">Register</a></li>

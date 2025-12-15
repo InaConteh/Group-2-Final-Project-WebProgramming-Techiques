@@ -47,7 +47,8 @@ $result = $conn->query("SELECT * FROM contact_submissions ORDER BY submitted_at 
     <header>
         <nav class="navbar">
             <a href="index.php" class="logo">
-                <img src="images/logo.png" alt="LionSport Agency">
+                <img src="images/logo_icon.png" alt="LionSport Agency Badge">
+                <span class="logo-text">LionSport Agency</span>
             </a>
             <ul class="nav-links">
                 <li><a href="index.php">Home</a></li>
@@ -95,10 +96,12 @@ $result = $conn->query("SELECT * FROM contact_submissions ORDER BY submitted_at 
                                 <td><?php echo htmlspecialchars($row['phone'] ?: 'N/A'); ?></td>
                                 <td class="message-cell">
                                     <div class="message-preview">
-                                        <?php echo htmlspecialchars(substr($row['message'], 0, 100)); ?>        <?php echo strlen($row['message']) > 100 ? '...' : ''; ?>
+                                        <?php echo htmlspecialchars(substr($row['message'], 0, 100)); ?>
+                                        <?php echo strlen($row['message']) > 100 ? '...' : ''; ?>
                                     </div>
                                     <div class="message-full" style="display: none;">
-                                        <?php echo nl2br(htmlspecialchars($row['message'])); ?></div>
+                                        <?php echo nl2br(htmlspecialchars($row['message'])); ?>
+                                    </div>
                                     <button class="btn-toggle-message" onclick="toggleMessage(this)">Show Full</button>
                                 </td>
                                 <td><?php echo date('M d, Y H:i', strtotime($row['submitted_at'])); ?></td>

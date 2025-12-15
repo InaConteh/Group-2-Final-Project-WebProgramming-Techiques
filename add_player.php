@@ -113,7 +113,10 @@ $conn->close();
 <body>
     <header>
         <nav class="navbar">
-            <div class="logo">Admin Panel</div>
+            <a href="index.php" class="logo">
+                <img src="images/logo_icon.png" alt="LionSport Agency Badge">
+                <span class="logo-text">LionSport Agency</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="players.php">Back to List</a></li>
             </ul>

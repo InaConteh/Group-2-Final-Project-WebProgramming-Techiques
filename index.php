@@ -17,7 +17,8 @@ include 'db_connect.php';
     <header>
         <nav class="navbar">
             <a href="index.php" class="logo">
-                <img src="images/logo.png" alt="LionSport Agency">
+                <img src="images/logo_icon.png" alt="LionSport Agency Badge">
+                <span class="logo-text">LionSport Agency</span>
             </a>
             <ul class="nav-links">
                 <li class="active-link"><a href="index.php">Home</a></li>

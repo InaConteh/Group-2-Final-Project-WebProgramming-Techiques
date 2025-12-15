@@ -48,14 +48,26 @@ a {
 .logo {
   display: flex;
   align-items: center;
+  gap: 15px; /* Space between icon and text */
+  text-decoration: none;
 }
 .logo img {
-  height: 60px; /* Adjust based on navbar height */
+  height: 80px; /* Slightly adjusted for icon balance */
+  max-height: 120px;
   width: auto;
   transition: transform 0.3s ease;
 }
 .logo:hover img {
-  transform: scale(1.05);
+  transform: rotate(15deg) scale(1.1); /* Fun hover effect for the ball */
+}
+.logo-text {
+  font-size: 1.8em;
+  font-weight: 900; /* Bold and impactful */
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Arial Black', sans-serif; /* Stronger font */
+  display: inline-block;
 }
 .nav-links {
   list-style: none;
