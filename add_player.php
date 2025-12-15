@@ -1,142 +1,156 @@
 <?php
-require_once 'db.php';
 session_start();
+include 'db_connect.php';
 
-if (!isset($_SESSION['user_id'])) {
+// Check if user is logged in and is admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-$error = '';
-$success = '';
+$message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
-    $position = trim($_POST['position']);
-    $club = trim($_POST['club']);
-    $nationality = trim($_POST['nationality']);
+    $name = $_POST['name'];
+    $club = $_POST['club'];
+    $age = $_POST['age'];
+    $nationality = $_POST['nationality'];
 
-    if (empty($name) || empty($position)) {
-        $error = "Name and Position are required.";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO players (name, position, club, nationality) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $name, $position, $club, $nationality);
+    // Handle File Upload
+    $target_dir = "uploads/";
+    // Ensure filename is unique or handles special chars to prevent issues
+    $filename = basename($_FILES["image"]["name"]);
+    $target_file = $target_dir . $filename;
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        if ($stmt->execute()) {
-            $success = "Player added successfully!";
+    // Check if image file is a actual image or fake image
+    if (isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if ($check !== false) {
+            $uploadOk = 1;
         } else {
-            $error = "Error: " . $stmt->error;
+            $message = "File is not an image.";
+            $uploadOk = 0;
         }
-        $stmt->close();
+    }
+
+    if ($uploadOk == 1) {
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            // Success upload, insert into DB
+            $image_url = $target_file; // Store path relative to root
+
+            $stmt = $conn->prepare("INSERT INTO players (name, club, age, image_url, nationality) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssiss", $name, $club, $age, $image_url, $nationality);
+
+            if ($stmt->execute()) {
+                header("Location: players.php");
+                exit();
+            } else {
+                $message = "Error: " . $stmt->error;
+            }
+            $stmt->close();
+
+        } else {
+            $message = "Sorry, there was an error uploading your file.";
+        }
     }
 }
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Player - LionSport Agency</title>
+    <title>Add Player | Football Agency</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .form-container {
             max-width: 500px;
-            margin: 3rem auto;
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 5px;
             font-weight: bold;
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
-        .btn-submit {
-            background: #006442;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .btn {
             width: 100%;
-            font-size: 1rem;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
         }
 
-        .alert {
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-
-        .alert-success {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .alert-error {
-            background: #ffebee;
-            color: #c62828;
+        .btn:hover {
+            background: #218838;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">LionSport</div>
-        <div class="nav-links">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="logout.php">Logout</a>
-        </div>
-    </nav>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Admin Panel</div>
+            <ul class="nav-links">
+                <li><a href="players.php">Back to List</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <div class="form-container">
-        <h2 style="color: #006442; margin-bottom: 1.5rem; text-align: center;">Add New Player</h2>
-
-        <?php if ($error): ?>
-            <div class="alert alert-error"><?php echo $error; ?></div>
-        <?php endif; ?>
-        <?php if ($success): ?>
-            <div class="alert alert-success"><?php echo $success; ?></div>
-        <?php endif; ?>
-
-        <form method="POST" action="">
+    <div class="form-container animate-on-scroll">
+        <h2>Add New Player</h2>
+        <?php if ($message)
+            echo "<p style='color:red;'>$message</p>"; ?>
+        <!-- Added enctype for file upload -->
+        <form method="POST" action="" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" required>
+                <label>Name</label>
+                <input type="text" name="name" required>
             </div>
             <div class="form-group">
-                <label for="position">Position</label>
-                <input type="text" id="position" name="position" required placeholder="e.g. Striker, Midfielder">
+                <label>Club</label>
+                <input type="text" name="club" required>
             </div>
             <div class="form-group">
-                <label for="club">Current Club</label>
-                <input type="text" id="club" name="club">
+                <label>Nationality</label>
+                <input type="text" name="nationality" required placeholder="e.g. Sierra Leone">
             </div>
             <div class="form-group">
-                <label for="nationality">Nationality</label>
-                <input type="text" id="nationality" name="nationality">
+                <label>Age</label>
+                <input type="number" name="age" required>
             </div>
-            <button type="submit" class="btn-submit">Add Player</button>
+            <div class="form-group">
+                <label>Player Image</label>
+                <input type="file" name="image" required accept="image/*">
+            </div>
+            <button type="submit" class="btn">Add Player</button>
         </form>
-        <div style="text-align: center; margin-top: 1rem;">
-            <a href="dashboard.php" style="color: #666;">Back to Dashboard</a>
-        </div>
     </div>
+    <?php include 'footer.php'; ?>
+    <script src="main.js"></script>
 </body>
 
 </html>

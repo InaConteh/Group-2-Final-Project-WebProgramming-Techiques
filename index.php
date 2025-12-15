@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db_connect.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,111 +8,180 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LionSport Agency - Home</title>
+    <title>Football Agency | Home</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="enhanced-hero.css">
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">LionSport</div>
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="about.html">About Us</a>
-            <a href="services.html">Services</a>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="dashboard.php">Dashboard</a>
-                <a href="logout.php" class="btn-secondary" style="padding: 5px 15px; border: 1px solid white;">Logout</a>
-            <?php else: ?>
-                <a href="login.php">Login</a>
-                <a href="register.php" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;">Register</a>
-            <?php endif; ?>
-        </div>
-    </nav>
+    <header>
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="images/logo.png" alt="LionSport Agency">
+            </a>
+            <ul class="nav-links">
+                <li class="active-link"><a href="index.php">Home</a></li>
+                <li><a href="players.php">Players</a></li>
+                <li><a href="about.php">About</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li><a href="logout.php">Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a></li>
+                <?php else: ?>
+                    <li><a href="login.php">Login</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Empowering Sierra Leonean Football Talent</h1>
-            <p>Connecting Africa's rising stars to global opportunities</p>
-            <div class="hero-buttons">
-                <a href="contact.html" class="btn-primary" style="text-decoration: none;">Join Us</a>
-                <a href="about.html" class="btn-secondary" style="text-decoration: none;">About Us</a>
+    <main class="home-container">
+        <?php
+        // Fetch active stats
+        $player_count_query = "SELECT COUNT(*) as count FROM players";
+        $player_count_result = $conn->query($player_count_query);
+        $player_count = ($player_count_result->num_rows > 0) ? $player_count_result->fetch_assoc()['count'] : 0;
+        $country_count_query = "SELECT COUNT(DISTINCT nationality) as count FROM players WHERE nationality IS NOT NULL AND nationality != ''";
+        $country_count_result = $conn->query($country_count_query);
+        $country_count = ($country_count_result->num_rows > 0) ? $country_count_result->fetch_assoc()['count'] : 0;
+
+        // Default values if 0 (visual fallback)
+        if ($player_count == 0)
+            $player_count = 150;
+        if ($country_count == 0)
+            $country_count = 25;
+        ?>
+        <section class="hero-section enhanced-hero" style="background-image: url('images/stadium-bg.png');">
+            <!-- Animated particles background -->
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
             </div>
-        </div>
-    </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stat-item">
-            <h3>150+</h3>
-            <p>Players Represented</p>
-        </div>
-        <div class="stat-item">
-            <h3>25+</h3>
-            <p>International Clubs</p>
-        </div>
-        <div class="stat-item">
-            <h3>8</h3>
-            <p>Countries Active</p>
-        </div>
-        <div class="stat-item">
-            <h3>50+</h3>
-            <p>Successful Transfers</p>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <h2>What Our Players Say</h2>
-        <div class="testimonial-card">
-            <img src="http://static.photos/people/320x240/12" alt="Player">
-            <div>
-                <h4>Mohamed Kamara</h4>
-                <p class="role">Midfielder • FC Porto</p>
-                <p class="quote">"LionSport opened doors I never imagined possible. Their professionalism and dedication
-                    got me my dream contract in Portugal."</p>
+            <!-- Floating football icons -->
+            <div class="floating-footballs">
+                <span class="football-icon">⚽</span>
+                <span class="football-icon">⚽</span>
+                <span class="football-icon">⚽</span>
             </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <h2>Ready to Take Your Career Global?</h2>
-        <p>Join our network of talented players and let us guide your journey to international success.</p>
-        <a href="contact.html" class="btn-primary" style="text-decoration: none;">Apply Now</a>
-    </section>
+            <div class="hero-overlay enhanced-overlay">
+                <!-- Animated badge/emblem -->
+                <div class="hero-badge">
+                    <div class="badge-ring"></div>
+                    <div class="badge-content">
+                        <span class="badge-icon">⚽</span>
+                        <span class="badge-text">FOOTBALL</span>
+                    </div>
+                </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <h3>🦁 LionSport</h3>
-                <p>Empowering Sierra Leonean football talent since 2015.</p>
-            </div>
-            <div>
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 LionSport Agency. All rights reserved.</p>
-        </div>
-    </footer>
+                <!-- Main heading with typing animation -->
+                <h1 class="hero-title">
+                    <span class="title-line-1">Shaping The Future of</span>
+                    <span class="title-line-2">
+                        <span class="highlight-text">Football</span>
+                        <span class="typed-text">Careers</span>
+                    </span>
+                </h1>
 
-    <!-- Floating CTA -->
-    <a href="contact.html" class="floating-btn">+</a>
+                <!-- Subtitle with fade-in -->
+                <p class="hero-subtitle">Where talent meets opportunity on the global stage</p>
+
+                <!-- Animated CTA buttons -->
+                <div class="hero-cta-group">
+                    <a href="players.php" class="cta-button cta-primary">
+                        <span class="button-icon">👥</span>
+                        View Players
+                        <span class="button-arrow">→</span>
+                    </a>
+                    <a href="about.php" class="cta-button cta-secondary">
+                        <span class="button-icon">ℹ️</span>
+                        Learn More
+                    </a>
+                </div>
+
+                <!-- Stats counter -->
+                <div class="hero-stats" style="margin-bottom: 60px;">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="<?php echo $player_count; ?>">0</span>
+                        <span class="stat-label">Players</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="<?php echo $country_count; ?>">0</span>
+                        <span class="stat-label">Countries</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="98">0</span>
+                        <span class="stat-label">Success Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="scroll-indicator">
+                <span class="scroll-text">Scroll to explore</span>
+                <div class="scroll-arrow">↓</div>
+            </div>
+        </section>
+
+        <section class="expertise-section">
+            <h2 class="animate-on-scroll">Our Expertise</h2>
+            <div class="expertise-grid">
+                <div class="expertise-card animate-on-scroll delay-100">
+                    <span class="icon">🔍</span>
+                    <h3>player scouting</h3>
+                    <p>Identifying and nurturing the next generation</p>
+                </div>
+                <div class="expertise-card animate-on-scroll delay-200">
+                    <span class="icon">📄</span>
+                    <h3>Contract negotiation</h3>
+                    <p>Securing the best possible terms and opportunities</p>
+                </div>
+                <div class="expertise-card animate-on-scroll delay-300">
+                    <span class="icon">📣</span>
+                    <h3>media management</h3>
+                    <p>Building and managing a player's public image</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-players-section">
+            <h2 class="animate-on-scroll">Meet Our Star Players</h2>
+            <div class="player-row">
+                <div class="player-photo-card animate-scale animate-on-scroll"><img src="images/kamara.webp"
+                        alt="Kei Kamara">
+                    <h3>Kei Kamara</h3>
+                </div>
+                <div class="player-photo-card animate-scale animate-on-scroll delay-100"><img src="images/Alpha.webp"
+                        alt="Alpha Turay">
+                    <h3>Alpha Turay</h3>
+                </div>
+                <div class="player-photo-card animate-scale animate-on-scroll delay-200"><img src="images/images.jfif"
+                        alt="Mohamed Kamara">
+                    <h3>Mohamed Kamara</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="news-testimonials-section">
+            <div class="testimonial-box animate-on-scroll">
+                <h3>Trusted by the best</h3>
+                <p>"This Agency changed my career. The negotiation skills are genuine..."</p>
+                <cite>--John Amadu-- (head coach, Rangers fc)</cite>
+            </div>
+            <div class="news-box animate-on-scroll delay-100">
+                <h3>Latest news</h3>
+                <p>kei kamara signed a record breaking deal at La Galaxy until 2029.</p>
+            </div>
+        </section>
+    </main>
+
+    <?php include 'footer.php'; ?>
+    <script src="main.js"></script>
 </body>
 
 </html>

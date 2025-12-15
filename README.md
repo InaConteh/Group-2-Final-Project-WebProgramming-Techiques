@@ -1,69 +1,89 @@
-# LionSport Agency Management System
+# Grass Root Football Agency Management System
 
-A web-based application for managing football players, contracts, and agency operations. This system includes user authentication (Login/Register), a dashboard for managing players (CRUD operations), and a public-facing website.
+A dynamic web application for managing a football agency's player directory, contracts, and recruiting. Built with PHP, MySQL, CSS (Vanilla), and JavaScript.
 
-## Prerequisites
+## 🚀 Features
 
-- **XAMPP** (or any PHP/MySQL environment)
-- **Web Browser**
+### 🌟 Public Features
 
-## Installation & Setup
+- **Dynamic Player Directory**: View all represented players with real-time data.
+- **Player Details**: Individual contract pages (`contract.php`) showing specific stats, club info, and highlights.
+- **User Authentication**: Secure Login and Registration system for fans/scouts.
+- **Responsive Design**: Mobile-friendly layout with smooth scroll animations.
+- **Downloadable Reports**: Generate and download text summaries for any player.
 
-### 1. Configure Environment
+### 🛡 Admin Features (Role-Based Access)
 
-1.  Ensure **Apache** and **MySQL** are running in XAMPP Control Panel.
-2.  Clone or move this project folder to your web server's document root (e.g., `C:\xampp\htdocs\WebProgramingTechniques`).
-    - _Note: If you are using a different folder name, adjust the URL accordingly._
+- **Dashboard Access**: Special admin privileges.
+- **Player Management**:
+  - **Add Player**: Upload photos, set nationality, club, and age.
+  - **Edit Player**: Update details and change images instantly.
+  - **Delete Player**: Remove records from the database.
+- **Image Uploads**: Real file handling for player profile pictures.
 
-### 2. Database Setup
+## 🛠 Prerequisites
 
-The system includes automated scripts to set up the database and tables.
+- **Web Server**: Apache (via XAMPP, WAMP, or MAMP).
+- **Database**: MySQL.
+- **PHP**: Version 7.4 or higher.
 
-1.  **Open your browser** and navigate to the project folder.
-2.  **Run the Setup Script**:
+## ⚙ Installation & Setup
 
-    - URL: `http://localhost/WebProgramingTechniques/setup_db.php`
-    - This script creates the `lionsport_db` database and the required tables (`users`, `players`).
-    - _Expected Output:_ "Table users created successfully", "Table players created successfully".
+1.  **Clone/Place Files**:
 
-3.  **Seed Sample Users (Optional)**:
-    - Run the sample users script to add default admin and user accounts.
-    - URL: `http://localhost/WebProgramingTechniques/add_sample_users.php`
-    - _Expected Output:_ Confirmation of created users.
+    - Ensure the project folder is in your server's root (e.g., `C:\xampp\htdocs\football_agency`).
 
-### 3. Usage
+2.  **Database Setup**:
 
-#### Public Access
+    - Open **phpMyAdmin**.
+    - Create a database named `football_agency_db`.
+    - Import the `schema.sql` file provided in this folder.
+    - **Crucial Step**: Run the update script to ensure all columns exist:
+      - Access: `http://localhost/football_agency/update_schema.php`
 
-- **Home Page**: `http://localhost/WebProgramingTechniques/index.php`
-- Browse services, about us, and contact pages.
+3.  **Database Configuration**:
 
-#### Admin/User Access
+    - Open `db_connect.php`.
+    - Verify credentials (default XAMPP is User: `root`, Pass: `[blank]`).
 
-1.  Click **Login** in the navigation bar or go to `login.php`.
-2.  **Default Credentials** (if you ran `add_sample_users.php`):
-    - **Admin 1**: `admin1@gmail.com` / `password123`
-    - **Admin 2**: `admin2@gmail.com` / `password123`
-    - **User 1**: `user1@gmail.com` / `password123`
-    - **User 2**: `user2@gmail.com` / `password123`
+4.  **Admin Account Setup**:
+    - Create the "Super Admin" account by visiting:
+      - `http://localhost/football_agency/admin_setup.php`
+    - **Default Credentials**:
+      - Email: `admin@agency.com`
+      - Password: `AdminSecret123!`
 
-#### Dashboard Features
+## 📖 Usage Guide
 
-- **View Players**: See a list of all players in the database.
-- **Add Player**: Click "+ Add New Player" to register a new talent.
-- **Edit/Delete**: Use the action buttons on the player list to manage records.
+### Logging In
 
-## File Structure
+- Navigate to `login.php`.
+- Enter your credentials.
+- Admins will see extra controls (Add/Edit/Delete) on the `players.php` page.
 
-- `db.php`: Database connection settings.
-- `setup_db.php`: Creates database and tables.
-- `index.php`: Main landing page (dynamic).
-- `login.php` / `register.php`: Authentication pages.
-- `dashboard.php`: Protected area for player management.
-- `add_player.php` / `edit_player.php`: Forms for CRUD operations.
+### Managing Players (Admin Only)
+
+- **Add**: Click "Add New Player" on the top of the Players Directory. Fill in the form and upload an image.
+- **Edit**: Click the "Edit" button on any player card. modify details or upload a new photo. Changes reflect immediately.
+
+### Downloading Reports
+
+- Go to any player's contract page.
+- Click the **⬇ Download Report** icon in the header.
+- A `.txt` file with the player's profile will be downloaded.
+
+## 📁 File Structure
+
+- `index.php`: Homepage with animations.
+- `players.php`: Main directory (Role-protected).
+- `contract.php`: Dynamic individual player page.
+- `admin_setup.php`: Script to generate admin user.
+- `update_schema.php`: Script to update DB table structure.
+- `uploads/`: Directory where player images are stored.
 - `style.css`: Main stylesheet.
+- `main.js`: Scroll animations and interactions.
 
-## Troubleshooting
+## 🎨 Credits
 
-- **Database Connection Error**: Check `db.php` and ensure your MySQL username/password matches your XAMPP settings (default: root/empty).
-- **404 Not Found**: Ensure the folder is correctly placed in `htdocs` or properly linked.
+- **Design**: Custom polished UI with glassmorphism and sticky navigation.
+- **Animations**: CSS3 & Intersection Observer API.
