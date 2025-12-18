@@ -60,6 +60,7 @@ $conn->close();
                 <p><strong>Age:</strong> <?php echo htmlspecialchars($player['age'] ?? 'N/A'); ?></p>
                 <p><strong>Market Value:</strong> $<?php echo number_format($player['market_value']); ?></p>
                 <p><strong>Status:</strong> <?php echo htmlspecialchars($player['market_status']); ?></p>
+                <p><strong>Intl. Stats:</strong> <?php echo htmlspecialchars($player['intl_stats'] ?? 'N/A'); ?></p>
 
                 <div class="actions" style="margin-top: 20px;">
                     <a href="download_report.php?id=<?php echo $player['id']; ?>" class="cta-button">Download Report</a>
